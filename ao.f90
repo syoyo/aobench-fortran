@@ -351,7 +351,7 @@ program ao
   end subroutine
 
   subroutine saveimage(fname, w, h, img)
-    character(len=80), intent(in) :: fname
+    character(len=*), intent(in) :: fname
     integer, intent(in)   :: w, h
     integer, intent(in)   :: img(w, h, 3)
 
