@@ -105,10 +105,10 @@ program ao
     C   = dot_product(rs, rs) - sphere%radius * sphere%radius
     D   = (B * B) - C
 
-    if (D > 0.0) then
+    if (D > 0) then
       t = -B - sqrt(D)
 
-      if ((t > 0.0) .and. (t < isect%t)) then
+      if ((t > 0) .and. (t < isect%t)) then
 
         isect%t   = t
         isect%hit = .true.
@@ -138,7 +138,7 @@ program ao
     if (abs(v) > 1.0e-17) then
       t = -(dot_product(ray%org, plane%n) + d) / v
 
-      if ((t > 0.0) .and. (t < isect%t)) then
+      if ((t > 0) .and. (t < isect%t)) then
 
         isect%t   = t
         isect%hit = .true.
@@ -157,18 +157,16 @@ program ao
     real(kind = REAL64), intent(in)  :: n(3)
 
     basis(:, 3) = n
-    basis(1, 2) = 0.0
-    basis(2, 2) = 0.0
-    basis(3, 2) = 0.0
+    basis(:, 2) = 0
 
-    if (n(1) < 0.6 .and. n(1) > -0.6) then
-      basis(1, 2) = 1.0
-    else if (n(2) < 0.6 .and. n(2) > -0.6) then
-      basis(2, 2) = 1.0
-    else if (n(3) < 0.6 .and. n(3) > -0.6) then
-      basis(3, 2) = 1.0
+    if (abs(n(1)) < 0.6_REAL64) then
+      basis(1, 2) = 1
+    else if (abs(n(2)) < 0.6_REAL64) then
+      basis(2, 2) = 1
+    else if (abs(n(3)) < 0.6_REAL64) then
+      basis(3, 2) = 1
     else
-      basis(1, 2) = 1.0
+      basis(1, 2) = 1
     endif
 
     basis(:,1) = vcross(basis(:,2), basis(:,3))
@@ -186,7 +184,7 @@ program ao
     integer i, j
     integer :: ntheta = NAO_SAMPLES
     integer :: nphi   = NAO_SAMPLES
-    real(kind = REAL64), parameter :: eps = 0.0001
+    real(kind = REAL64), parameter :: eps = 0.0001_REAL64
 
     real(kind = REAL64) p(3)
     real(kind = REAL64) basis(3, 3)
@@ -211,16 +209,14 @@ program ao
         call random_number(u0)
         call random_number(u1)
         theta = sqrt(u0)
-        phi = 2.0 * PI * u1
+        phi = 2 * PI * u1
 
         ldir(1) = cos(phi) * theta;
         ldir(2) = sin(phi) * theta;
-        ldir(3) = sqrt(1.0 - theta * theta);
+        ldir(3) = sqrt(1 - theta * theta);
 
         ! local -> global
-        dir(1) = ldir(1) * basis(1,1) + ldir(2) * basis(1,2) + ldir(3) * basis(1, 3)
-        dir(2) = ldir(1) * basis(2,1) + ldir(2) * basis(2,2) + ldir(3) * basis(2, 3)
-        dir(3) = ldir(1) * basis(3,1) + ldir(2) * basis(3,2) + ldir(3) * basis(3, 3)
+        dir = matmul(basis, ldir)
 
         ray%org = p
         ray%dir = dir
@@ -233,8 +229,8 @@ program ao
         call ray_sphere_intersect(occIsect, ray, scene_spheres(3))
         call ray_plane_intersect(occIsect, ray, scene_plane)
 
-        if (occIsect%hit .eqv. .true.) then
-          occlusion = occlusion + 1.0
+        if (occIsect%hit) then
+          occlusion = occlusion + 1
         endif
 
       end do
@@ -242,9 +238,7 @@ program ao
 
     occlusion = (ntheta * nphi - occlusion) / (ntheta * nphi)
 
-    col(1) = occlusion
-    col(2) = occlusion
-    col(3) = occlusion
+    col = occlusion
 
   end subroutine
 
@@ -253,15 +247,9 @@ program ao
     integer clamp
     integer i
 
-    i = f * 255.0
-    if (i < 0) then
-      i = 0
-    endif
-
-    if (i > 255) then
-      i = 255
-    endif
-
+    i = f * 255
+    if(i < 0) i = 0
+    if(i > 255) i = 255
     clamp = i
   end function
 
@@ -289,14 +277,12 @@ program ao
         do v = 1, nsubsamples
           do u = 1, nsubsamples
 
-            px = (x + (dble(u) / nsubsamples) - (w / 2.0)) / (w / 2.0)
-            py = -(y + (dble(v) / nsubsamples) - (h / 2.0)) / (h / 2.0)
+            px = (x + (dble(u) / nsubsamples) - (dble(w) / 2)) / (dble(w) / 2)
+            py = -(y + (dble(v) / nsubsamples) - (dble(h) / 2)) / (dble(h) / 2)
 
-            ray%org = 0.0
+            ray%org = 0
 
-            ray%dir(1) = px
-            ray%dir(2) = py
-            ray%dir(3) = -1.0
+            ray%dir = [px, py, dble(-1)]
             ray%dir = vnormalize(ray%dir)
 
             isect%t = 1.0e+17
@@ -307,23 +293,17 @@ program ao
             call ray_sphere_intersect(isect, ray, scene_spheres(3))
             call ray_plane_intersect(isect, ray, scene_plane)
 
-            if (isect%hit .eqv. .true.) then
+            if (isect%hit) then
               call ambient_occlusion(col, isect)
-              fimg(x, y, 1) = fimg(x, y, 1) + col(1)
-              fimg(x, y, 2) = fimg(x, y, 2) + col(2)
-              fimg(x, y, 3) = fimg(x, y, 3) + col(3)
+              fimg(x, y, :) = fimg(x, y, :) + col
             else
-              fimg(x, y, 1) = 0.0
-              fimg(x, y, 2) = 0.0
-              fimg(x, y, 3) = 0.0
+              fimg(x, y, :) = 0
             endif
 
           end do
         end do
 
-        fimg(x, y, 1) = fimg(x, y, 1) / (nsubsamples * nsubsamples)
-        fimg(x, y, 2) = fimg(x, y, 2) / (nsubsamples * nsubsamples)
-        fimg(x, y, 3) = fimg(x, y, 3) / (nsubsamples * nsubsamples)
+        fimg(x, y, :) = fimg(x, y, :) / (nsubsamples * nsubsamples)
 
         img(x, y, 1) = clamp(fimg(x, y, 1))
         img(x, y, 2) = clamp(fimg(x, y, 1))
@@ -341,7 +321,7 @@ program ao
     scene_spheres(2)%center = [-0.5_REAL64, 0.0_REAL64, -3.0_REAL64]
     scene_spheres(2)%radius = 0.5_REAL64
 
-    scene_spheres(3)%center =  [1.0, 0.0, -2.2]
+    scene_spheres(3)%center =  [1.0_REAL64, 0.0_REAL64, -2.2_REAL64]
     scene_spheres(3)%radius = 0.5_REAL64
 
     scene_plane%p = [0.0_REAL64, -0.5_REAL64, 0.0_REAL64]
