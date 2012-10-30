@@ -135,7 +135,7 @@ program ao
     d = -dot_product(plane%p, plane%n)
     v = dot_product(ray%dir, plane%n)
 
-    if (abs(v) > 1.0e-17) then
+    if (abs(v) > epsilon(v)) then
       t = -(dot_product(ray%org, plane%n) + d) / v
 
       if ((t > 0) .and. (t < isect%t)) then
@@ -221,7 +221,7 @@ program ao
         ray%org = p
         ray%dir = dir
 
-        occIsect%t = 1.0e+17
+        occIsect%t = huge(occIsect%t)
         occIsect%hit = .false.
 
         call ray_sphere_intersect(occIsect, ray, scene_spheres(1))
@@ -285,7 +285,7 @@ program ao
             ray%dir = [px, py, dble(-1)]
             ray%dir = vnormalize(ray%dir)
 
-            isect%t = 1.0e+17
+            isect%t = huge(isect%t)
             isect%hit = .false.
 
             call ray_sphere_intersect(isect, ray, scene_spheres(1))
