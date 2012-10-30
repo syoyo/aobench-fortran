@@ -71,25 +71,23 @@ end module my_ao
 
 program ao
   use iso_fortran_env, only: REAL64
-  use my_ao, only: WIDTH, HEIGHT, NSUBSAMPLES, NAO_SAMPLES, PI
+  use my_ao, only: W => WIDTH, H => HEIGHT, NSUBSAMPLES, NAO_SAMPLES, PI
   use my_ao, only: isect_t, sphere_t, ray_t, plane_t
   use my_ao, only: scene_spheres, scene_plane
   use my_ao, only: vcross, vnormalize
 
   implicit none
 
-  integer :: w = WIDTH
-  integer :: h = HEIGHT
   integer, allocatable, dimension(:,:,:) :: img
   character(len=80) :: filename = 'output.ppm'
 
-  allocate( img(w, h, 3) )
+  allocate( img(W, H, 3) )
 
   call init_scene()
 
-  call render(img, w, h, NSUBSAMPLES)
+  call render(img, W, H, NSUBSAMPLES)
 
-  call saveimage(filename, w, h, img)
+  call saveimage(filename, W, H, img)
 
   contains
 
