@@ -335,28 +335,18 @@ program ao
   end subroutine
 
   subroutine init_scene()
-    scene_spheres(1)%center(1) = -2.0
-    scene_spheres(1)%center(2) =  0.0
-    scene_spheres(1)%center(3) = -3.5
+    scene_spheres(1)%center = [-2.0, 0,0, -3.5]
     scene_spheres(1)%radius = 0.5
 
-    scene_spheres(2)%center(1) = -0.5
-    scene_spheres(2)%center(2) =  0.0
-    scene_spheres(2)%center(3) = -3.0
+    scene_spheres(2)%center = [-0.5, 0.0, -3.0]
     scene_spheres(2)%radius = 0.5
 
-    scene_spheres(3)%center(1) =  1.0
-    scene_spheres(3)%center(2) =  0.0
-    scene_spheres(3)%center(3) = -2.2
+    scene_spheres(3)%center =  [1.0, 0.0, -2.2]
     scene_spheres(3)%radius = 0.5
 
-    scene_plane%p(1) = 0.0
-    scene_plane%p(2) = -0.5
-    scene_plane%p(3) = 0.0
+    scene_plane%p = [0.0, -0.5, 0.0]
 
-    scene_plane%n(1) = 0.0
-    scene_plane%n(2) = 1.0
-    scene_plane%n(3) = 0.0
+    scene_plane%n = [0.0, 1.0, 0.0]
 
   end subroutine
 
