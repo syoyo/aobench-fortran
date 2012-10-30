@@ -189,7 +189,7 @@ program ao
     real(kind = REAL64) p(3)
     real(kind = REAL64) basis(3, 3)
 
-    real(kind = REAL64) :: occlusion = 0.0
+    real(kind = REAL64) :: occlusion
 
     real(kind = REAL64)  theta, phi
     real(kind = REAL64)  u0, u1
@@ -200,6 +200,7 @@ program ao
     type(ray_t)       ray
     type(isect_t)     occIsect
 
+    occlusion = 0
     p = isect%p + eps * isect%n
 
     call orthoBasis(basis, isect%n)
