@@ -249,8 +249,12 @@ program ao
     integer i
 
     i = f * 255
-    if(i < 0) i = 0
-    if(i > 255) i = 255
+    if (i < 0) then
+      i = 0
+    else if (i > 255) then
+      i = 255
+    end if
+
     clamp = i
   end function
 
