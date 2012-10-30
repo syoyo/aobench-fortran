@@ -6,6 +6,12 @@ module my_ao
 
   implicit none
 
+  private
+  public :: WIDTH, HEIGHT, NSUBSAMPLES, NAO_SAMPLES, PI
+  public :: isect_t, sphere_t, ray_t, plane_t
+  public :: scene_spheres, scene_plane
+  public :: vcross, vnormalize
+
   integer, parameter :: WIDTH       = 256
   integer, parameter :: HEIGHT      = 256
   integer, parameter :: NSUBSAMPLES = 2
@@ -65,7 +71,10 @@ end module my_ao
 
 program ao
   use iso_fortran_env, only: REAL64
-  use my_ao
+  use my_ao, only: WIDTH, HEIGHT, NSUBSAMPLES, NAO_SAMPLES, PI
+  use my_ao, only: isect_t, sphere_t, ray_t, plane_t
+  use my_ao, only: scene_spheres, scene_plane
+  use my_ao, only: vcross, vnormalize
 
   implicit none
 
