@@ -355,7 +355,7 @@ program ao
 
     do j=1,h
       do i=1,w
-        write(u, '(3A1)', advance='no') achar(img(i,j,1)), achar(img(i,j,2)), achar(img(i,j,3))
+        write(u, '(3A1)', advance='no') achar(img(i,j,:))
       end do
     end do
 
