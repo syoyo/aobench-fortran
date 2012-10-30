@@ -181,7 +181,7 @@ program ao
     real(kind = REAL64), intent(out) :: col(3)
     type(isect_t)   , intent(in)  :: isect
 
-    integer i, j
+    integer i, j, k
     integer :: ntheta = NAO_SAMPLES
     integer :: nphi   = NAO_SAMPLES
     real(kind = REAL64), parameter :: eps = 0.0001_REAL64
@@ -225,9 +225,9 @@ program ao
         occIsect%t = huge(occIsect%t)
         occIsect%hit = .false.
 
-        call ray_sphere_intersect(occIsect, ray, scene_spheres(1))
-        call ray_sphere_intersect(occIsect, ray, scene_spheres(2))
-        call ray_sphere_intersect(occIsect, ray, scene_spheres(3))
+        do k = lbound(scene_spheres, 1), ubound(scene_spheres, 1)
+          call ray_sphere_intersect(occIsect, ray, scene_spheres(k))
+        end do
         call ray_plane_intersect(occIsect, ray, scene_plane)
 
         if (occIsect%hit) then
@@ -257,6 +257,7 @@ program ao
   subroutine render(img, w, h, nsubsamples)
     integer x, y
     integer u, v
+    integer i
 
     integer, intent(in)   :: w
     integer, intent(in)   :: h
@@ -289,9 +290,9 @@ program ao
             isect%t = huge(isect%t)
             isect%hit = .false.
 
-            call ray_sphere_intersect(isect, ray, scene_spheres(1))
-            call ray_sphere_intersect(isect, ray, scene_spheres(2))
-            call ray_sphere_intersect(isect, ray, scene_spheres(3))
+            do i = lbound(scene_spheres, 1), ubound(scene_spheres, 1)
+              call ray_sphere_intersect(isect, ray, scene_spheres(i))
+            end do
             call ray_plane_intersect(isect, ray, scene_plane)
 
             if (isect%hit) then
