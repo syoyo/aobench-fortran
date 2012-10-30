@@ -276,6 +276,9 @@ program ao
     real(kind = REAL64)  col(3)
 
     real(kind = REAL64)  fimg(w, h, 3)
+    real(kind = REAL64) halfW, halfH
+    halfW = dble(w)/2
+    halfH = dble(h)/2
 
     fimg = 0
 
@@ -285,8 +288,8 @@ program ao
         do v = 1, nsubsamples
           do u = 1, nsubsamples
 
-            px = (x + (dble(u) / nsubsamples) - (dble(w) / 2)) / (dble(w) / 2)
-            py = -(y + (dble(v) / nsubsamples) - (dble(h) / 2)) / (dble(h) / 2)
+            px = (x + (dble(u) / nsubsamples) - halfW) / halfW
+            py = -(y + (dble(v) / nsubsamples) - halfH) / halfH
 
             ray%org = 0
 
