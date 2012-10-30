@@ -99,12 +99,12 @@ program ao
 
     double precision rs(3)
     double precision B, C, D
-    double precision t  
+    double precision t
 
     rs  = ray%org - sphere%center
-    B   = vdot(rs, ray%dir) 
+    B   = vdot(rs, ray%dir)
     C   = vdot(rs, rs) - sphere%radius * sphere%radius
-    D   = (B * B) - C 
+    D   = (B * B) - C
 
     if (D > 0.0) then
       t = -B - sqrt(D)
@@ -116,11 +116,11 @@ program ao
 
         isect%p   = ray%org + t * ray%dir
         isect%n   = vnormalize(isect%p - sphere%center)
-        
+
       endif
 
     endif
-    
+
   end subroutine
 
 
@@ -148,11 +148,11 @@ program ao
 
         isect%p   = ray%org + t * ray%dir
         isect%n   = plane%n
-        
+
       endif
 
     endif
-    
+
   end subroutine
 
   subroutine orthoBasis(basis, n)
@@ -167,18 +167,18 @@ program ao
     basis(3, 2) = 0.0
 
     if (n(1) < 0.6 .and. n(1) > -0.6) then
-      basis(1, 2) = 1.0 
+      basis(1, 2) = 1.0
     else if (n(2) < 0.6 .and. n(2) > -0.6) then
-      basis(2, 2) = 1.0 
+      basis(2, 2) = 1.0
     else if (n(3) < 0.6 .and. n(3) > -0.6) then
-      basis(3, 2) = 1.0 
+      basis(3, 2) = 1.0
     else
-      basis(1, 2) = 1.0 
+      basis(1, 2) = 1.0
     endif
 
     basis(:,1) = vcross(basis(:,2), basis(:,3))
     basis(:,1) = vnormalize(basis(:,1))
-    
+
     basis(:,2) = vcross(basis(:,3), basis(:,1))
     basis(:,2) = vnormalize(basis(:,2))
 
@@ -210,7 +210,7 @@ program ao
     type(isect_t)     occIsect
 
     p = isect%p + eps * isect%n
-    
+
     call orthoBasis(basis, isect%n)
 
     do j = 1, ntheta
@@ -239,14 +239,14 @@ program ao
         call ray_sphere_intersect(occIsect, ray, scene_spheres(2))
         call ray_sphere_intersect(occIsect, ray, scene_spheres(3))
         call ray_plane_intersect(occIsect, ray, scene_plane)
-        
+
         if (occIsect%hit .eqv. .true.) then
           occlusion = occlusion + 1.0
         endif
-        
+
       end do
     end do
-    
+
     occlusion = (ntheta * nphi - occlusion) / (ntheta * nphi)
 
     col(1) = occlusion
@@ -352,12 +352,12 @@ program ao
     scene_spheres(1)%center(2) =  0.0
     scene_spheres(1)%center(3) = -3.5
     scene_spheres(1)%radius = 0.5
-   
+
     scene_spheres(2)%center(1) = -0.5
     scene_spheres(2)%center(2) =  0.0
     scene_spheres(2)%center(3) = -3.0
     scene_spheres(2)%radius = 0.5
-  
+
     scene_spheres(3)%center(1) =  1.0
     scene_spheres(3)%center(2) =  0.0
     scene_spheres(3)%center(3) = -2.2
@@ -384,7 +384,7 @@ program ao
     integer i, j
 
     open(u, file=fname, status='replace')
-  
+
     write(u, '(A2)') 'P6'
     write(u, '(I0,'' '',I0)') w, h
     write(u, '(A)') '255'
@@ -400,6 +400,3 @@ program ao
   end subroutine
 
 end program ao
-
-
-
