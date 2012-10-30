@@ -92,8 +92,6 @@ program ao
   contains
 
   subroutine ray_sphere_intersect(isect, ray, sphere)
-    implicit none
-
     type(isect_t) , intent(inout) :: isect
     type(ray_t)   , intent(in)    :: ray
     type(sphere_t), intent(in)    :: sphere
@@ -126,8 +124,6 @@ program ao
 
 
   subroutine ray_plane_intersect(isect, ray, plane)
-    implicit none
-
     type(isect_t)   isect
     type(ray_t)     ray
     type(plane_t)   plane
@@ -157,8 +153,6 @@ program ao
   end subroutine
 
   subroutine orthoBasis(basis, n)
-    implicit none
-
     real(kind = REAL64), intent(out) :: basis(3, 3)
     real(kind = REAL64), intent(in)  :: n(3)
 
@@ -186,8 +180,6 @@ program ao
   end subroutine
 
   subroutine ambient_occlusion(col, isect)
-    implicit none
-
     real(kind = REAL64), intent(out) :: col(3)
     type(isect_t)   , intent(in)  :: isect
 
@@ -257,8 +249,6 @@ program ao
   end subroutine
 
   function clamp(f)
-    implicit none
-
     real(kind = REAL64), intent(in) :: f
     integer clamp
     integer i
@@ -276,8 +266,6 @@ program ao
   end function
 
   subroutine render(img, w, h, nsubsamples)
-    implicit none
-
     integer x, y
     integer u, v
 
@@ -347,8 +335,6 @@ program ao
   end subroutine
 
   subroutine init_scene()
-    implicit none
-
     scene_spheres(1)%center(1) = -2.0
     scene_spheres(1)%center(2) =  0.0
     scene_spheres(1)%center(3) = -3.5
@@ -375,8 +361,6 @@ program ao
   end subroutine
 
   subroutine saveimage(fname, w, h, img)
-    implicit none
-
     character(len=80), intent(in) :: fname
     integer, intent(in)   :: w, h
     integer, intent(in)   :: img(w, h, 3)
