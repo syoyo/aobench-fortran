@@ -11,7 +11,7 @@ module my_ao
   integer, parameter :: NSUBSAMPLES = 2
   integer, parameter :: NAO_SAMPLES = 8
 
-  real(kind = REAL64), parameter :: PI = 3.1415927
+  real(kind = REAL64), parameter :: PI = 4*atan(1.0_REAL64)
 
   !
   ! types
