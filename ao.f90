@@ -277,6 +277,8 @@ program ao
 
     real(kind = REAL64)  fimg(w, h, 3)
 
+    fimg = 0
+
     do y = 1, h
       do x = 1, w
 
