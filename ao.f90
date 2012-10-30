@@ -295,8 +295,8 @@ program ao
 
     real(kind = REAL64)  fimg(w, h, 3)
 
-    do y = 1, height
-      do x = 1, width
+    do y = 1, h
+      do x = 1, w
 
         do v = 1, nsubsamples
           do u = 1, nsubsamples
