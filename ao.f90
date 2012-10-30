@@ -289,8 +289,8 @@ program ao
         do v = 1, nsubsamples
           do u = 1, nsubsamples
 
-            px = (x + (u / nsubsamples) - (w / 2.0)) / (w / 2.0)
-            py = -(y + (v / nsubsamples) - (h / 2.0)) / (h / 2.0)
+            px = (x + (dble(u) / nsubsamples) - (w / 2.0)) / (w / 2.0)
+            py = -(y + (dble(v) / nsubsamples) - (h / 2.0)) / (h / 2.0)
 
             ray%org = 0.0
 
