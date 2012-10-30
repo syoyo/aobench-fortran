@@ -242,7 +242,7 @@ program ao
 
   end subroutine
 
-  function clamp(f)
+  elemental function clamp(f)
     real(kind = REAL64), intent(in) :: f
     integer clamp
     integer i
@@ -305,9 +305,7 @@ program ao
 
         fimg(x, y, :) = fimg(x, y, :) / (nsubsamples * nsubsamples)
 
-        img(x, y, 1) = clamp(fimg(x, y, 1))
-        img(x, y, 2) = clamp(fimg(x, y, 1))
-        img(x, y, 3) = clamp(fimg(x, y, 1))
+        img(x, y, :) = clamp(fimg(x, y, :))
 
       end do
     end do
