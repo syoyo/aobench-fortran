@@ -2,6 +2,8 @@
 ! Fortran90 port of aobench by Syoyo Fujita.
 !
 module my_ao
+  use iso_fortran_env, only: REAL64
+
   implicit none
 
   integer, parameter :: WIDTH       = 256
@@ -9,31 +11,31 @@ module my_ao
   integer, parameter :: NSUBSAMPLES = 2
   integer, parameter :: NAO_SAMPLES = 8
 
-  double precision, parameter :: PI = 3.1415927
+  real(kind = REAL64), parameter :: PI = 3.1415927
 
   !
   ! types
   !
   type isect_t
-    double precision ::  t
-    double precision ::  p(3) ! pos
-    double precision ::  n(3) ! normal
+    real(kind = REAL64) ::  t
+    real(kind = REAL64) ::  p(3) ! pos
+    real(kind = REAL64) ::  n(3) ! normal
     logical          ::  hit
   end type isect_t
 
   type sphere_t
-    double precision  ::  center(3)
-    double precision  ::  radius
+    real(kind = REAL64)  ::  center(3)
+    real(kind = REAL64)  ::  radius
   end type sphere_t
 
   type ray_t
-    double precision  ::  org(3)
-    double precision  ::  dir(3)
+    real(kind = REAL64)  ::  org(3)
+    real(kind = REAL64)  ::  dir(3)
   end type ray_t
 
   type plane_t
-    double precision  ::  p(3)
-    double precision  ::  n(3)
+    real(kind = REAL64)  ::  p(3)
+    real(kind = REAL64)  ::  n(3)
   end type plane_t
 
 
@@ -46,22 +48,22 @@ module my_ao
   ! vector ops
   !
   function vdot(a, b)
-    double precision a(3), b(3)
-    double precision vdot
+    real(kind = REAL64) a(3), b(3)
+    real(kind = REAL64) vdot
     vdot = a(1) * b(1) + a(2) * b(2) + a(3) * b(3)
   end function
 
   function vcross(a, b)
-    double precision a(3), b(3), vcross(3)
+    real(kind = REAL64) a(3), b(3), vcross(3)
     vcross(1) = a(2) * b(3) - a(3) * b(2)
     vcross(2) = a(3) * b(1) - a(1) * b(3)
     vcross(3) = a(1) * b(2) - a(2) * b(1)
   end function
 
   function vnormalize(a)
-    double precision, intent(in) :: a(3)
-    double precision vnormalize(3)
-    double precision length
+    real(kind = REAL64), intent(in) :: a(3)
+    real(kind = REAL64) vnormalize(3)
+    real(kind = REAL64) length
     length = sqrt(vdot(a, a))
     vnormalize(1) = a(1) / length
     vnormalize(2) = a(2) / length
@@ -71,6 +73,7 @@ module my_ao
 end module my_ao
 
 program ao
+  use iso_fortran_env, only: REAL64
   use my_ao
 
   implicit none
@@ -97,9 +100,9 @@ program ao
     type(ray_t)   , intent(in)    :: ray
     type(sphere_t), intent(in)    :: sphere
 
-    double precision rs(3)
-    double precision B, C, D
-    double precision t
+    real(kind = REAL64) rs(3)
+    real(kind = REAL64) B, C, D
+    real(kind = REAL64) t
 
     rs  = ray%org - sphere%center
     B   = vdot(rs, ray%dir)
@@ -131,9 +134,9 @@ program ao
     type(ray_t)     ray
     type(plane_t)   plane
 
-    double precision d
-    double precision v
-    double precision t
+    real(kind = REAL64) d
+    real(kind = REAL64) v
+    real(kind = REAL64) t
 
     d = -vdot(plane%p, plane%n)
     v = vdot(ray%dir, plane%n)
@@ -158,8 +161,8 @@ program ao
   subroutine orthoBasis(basis, n)
     implicit none
 
-    double precision, intent(out) :: basis(3, 3)
-    double precision, intent(in)  :: n(3)
+    real(kind = REAL64), intent(out) :: basis(3, 3)
+    real(kind = REAL64), intent(in)  :: n(3)
 
     basis(:, 3) = n
     basis(1, 2) = 0.0
@@ -187,24 +190,24 @@ program ao
   subroutine ambient_occlusion(col, isect)
     implicit none
 
-    double precision, intent(out) :: col(3)
+    real(kind = REAL64), intent(out) :: col(3)
     type(isect_t)   , intent(in)  :: isect
 
     integer i, j
     integer :: ntheta = NAO_SAMPLES
     integer :: nphi   = NAO_SAMPLES
-    double precision, parameter :: eps = 0.0001
+    real(kind = REAL64), parameter :: eps = 0.0001
 
-    double precision p(3)
-    double precision basis(3, 3)
+    real(kind = REAL64) p(3)
+    real(kind = REAL64) basis(3, 3)
 
-    double precision :: occlusion = 0.0
+    real(kind = REAL64) :: occlusion = 0.0
 
-    double precision  theta, phi
-    double precision  u0, u1
+    real(kind = REAL64)  theta, phi
+    real(kind = REAL64)  u0, u1
 
-    double precision  ldir(3)
-    double precision  dir(3)
+    real(kind = REAL64)  ldir(3)
+    real(kind = REAL64)  dir(3)
 
     type(ray_t)       ray
     type(isect_t)     occIsect
@@ -258,7 +261,7 @@ program ao
   function clamp(f)
     implicit none
 
-    double precision, intent(in) :: f
+    real(kind = REAL64), intent(in) :: f
     integer clamp
     integer i
 
@@ -285,14 +288,14 @@ program ao
     integer, intent(in)   :: nsubsamples
     integer, intent(out)  :: img(w, h, 3)
 
-    double precision  px, py
+    real(kind = REAL64)  px, py
 
     type(ray_t)       ray
     type(isect_t)     isect
 
-    double precision  col(3)
+    real(kind = REAL64)  col(3)
 
-    double precision  fimg(w, h, 3)
+    real(kind = REAL64)  fimg(w, h, 3)
 
     do y = 1, height
       do x = 1, width
