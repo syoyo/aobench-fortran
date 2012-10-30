@@ -47,12 +47,6 @@ module my_ao
   !
   ! vector ops
   !
-  function vdot(a, b)
-    real(kind = REAL64) a(3), b(3)
-    real(kind = REAL64) vdot
-    vdot = a(1) * b(1) + a(2) * b(2) + a(3) * b(3)
-  end function
-
   function vcross(a, b)
     real(kind = REAL64) a(3), b(3), vcross(3)
     vcross(1) = a(2) * b(3) - a(3) * b(2)
@@ -63,11 +57,7 @@ module my_ao
   function vnormalize(a)
     real(kind = REAL64), intent(in) :: a(3)
     real(kind = REAL64) vnormalize(3)
-    real(kind = REAL64) length
-    length = sqrt(vdot(a, a))
-    vnormalize(1) = a(1) / length
-    vnormalize(2) = a(2) / length
-    vnormalize(3) = a(3) / length
+    vnormalize = a/norm2(a)
   end function
 
 end module my_ao
@@ -105,8 +95,8 @@ program ao
     real(kind = REAL64) t
 
     rs  = ray%org - sphere%center
-    B   = vdot(rs, ray%dir)
-    C   = vdot(rs, rs) - sphere%radius * sphere%radius
+    B   = dot_product(rs, ray%dir)
+    C   = dot_product(rs, rs) - sphere%radius * sphere%radius
     D   = (B * B) - C
 
     if (D > 0.0) then
@@ -138,11 +128,11 @@ program ao
     real(kind = REAL64) v
     real(kind = REAL64) t
 
-    d = -vdot(plane%p, plane%n)
-    v = vdot(ray%dir, plane%n)
+    d = -dot_product(plane%p, plane%n)
+    v = dot_product(ray%dir, plane%n)
 
     if (abs(v) > 1.0e-17) then
-      t = -(vdot(ray%org, plane%n) + d) / v
+      t = -(dot_product(ray%org, plane%n) + d) / v
 
       if ((t > 0.0) .and. (t < isect%t)) then
 
