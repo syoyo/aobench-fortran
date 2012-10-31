@@ -7,7 +7,7 @@ Compile
 -------
 
 
-  $ gfortran ao.f90
+    $ gfortran ao.f90
 
 Tested
 ------
@@ -17,3 +17,6 @@ Tested
 * GNU Fortran (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
 * ifort (IFORT) 11.1 20091130
 * ifort (IFORT) 13.0.0 20120731
+
+thanks to kshramt!
+
