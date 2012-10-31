@@ -2,15 +2,16 @@
 ! Fortran90 port of aobench by Syoyo Fujita.
 !
 module my_ao
-  use iso_fortran_env, only: REAL64
-
   implicit none
 
   private
+  public :: REAL64
   public :: WIDTH, HEIGHT, NSUBSAMPLES, NAO_SAMPLES, PI
   public :: isect_t, sphere_t, ray_t, plane_t
   public :: scene_spheres, scene_plane
   public :: vcross, vnormalize
+
+  integer, parameter :: REAL64      = kind(dble(0))
 
   integer, parameter :: WIDTH       = 256
   integer, parameter :: HEIGHT      = 256
@@ -70,7 +71,7 @@ module my_ao
 end module my_ao
 
 program ao
-  use iso_fortran_env, only: REAL64
+  use my_ao, only: REAL64
   use my_ao, only: W => WIDTH, H => HEIGHT, NSUBSAMPLES, NAO_SAMPLES, PI
   use my_ao, only: isect_t, sphere_t, ray_t, plane_t
   use my_ao, only: scene_spheres, scene_plane
