@@ -65,7 +65,7 @@ module my_ao
   function vnormalize(a)
     real(kind = REAL64), intent(in) :: a(3)
     real(kind = REAL64) vnormalize(3)
-    vnormalize = a/norm2(a)
+    vnormalize = a/sqrt(dot_product(a, a))
   end function
 
 end module my_ao
