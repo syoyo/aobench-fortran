@@ -1,5 +1,6 @@
 !
 ! Fortran90 port of aobench by Syoyo Fujita.
+! Improved & refactored by kshramt.
 !
 module my_ao
   implicit none
